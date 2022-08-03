@@ -4,10 +4,26 @@
 if [[ $1 == '--help' || $1 == '-h' || ! $1 ]]
 then
 	head -n3 $0
-	echo  "  Usage : $0 [FACTOR 0] [FACTOR 1] [FACTOR 2] ..."
+	echo "
+Usage : $0 [OPTIONS] [FACTOR 0] [FACTOR 1] [FACTOR 2] ...
+	example: \`$0 1 0.2 -3\` as '1+0.2+(-3)'.
+options:
+  -	Using shell pipes as input sources.
+	example: \`echo 1 0.2| $0 - -3\` as '1 + 0.2 + (-3)'.
+  --help,-h	List this help.
+"
 	exit
 fi
+#处理管道
 jia=($*)
+if [[ $1 == '-' ]]
+then
+	while read f
+	do
+		jia[0]=
+		jia=($f ${jia[@]})
+	done
+fi
 #检查参数格式是否数字
 for ((i=0;i<${#jia[@]};i++))
 do
@@ -38,7 +54,7 @@ do
 				if [[ $l == '.' && $l == $m ]]
 				then
 					check_1=$(expr ${check_1:-0} + 1)
-					echo $i $k $check_1
+#					echo $i $k $check_1
 				fi
 			done
 			if [[ $check == 0 ]]
@@ -49,7 +65,7 @@ do
 		done
 		if [[ $check_1 -gt 1 ]]
 		then
-			echo "There are more then one '.' in ${jia[$i]}"
+			echo "There are more then one '.' in '${jia[$i]}'"
 			exit $(expr $i + 1)
 		fi
 	done
@@ -61,7 +77,7 @@ done
 #去除小数点，取小数位
 for i in ${jia[@]}
 do
-	if [[ ${i#*.} != $i ]]
+	if [[ ${i#*.} != $i && ${i#*.} ]]
 	then
 		l=${#j}
 		l=${l:-0}
@@ -82,7 +98,7 @@ do
 		k=${i%.*}
 		zhengshu=(${zhengshu[@]} $k)
 	else
-		zhengshu=(${zhengshu[@]} $i)
+		zhengshu=(${zhengshu[@]} ${i%.*})
 		xiaoshu=(${xiaoshu[@]} 0)
 	fi
 	xiaoshuwei=$l
