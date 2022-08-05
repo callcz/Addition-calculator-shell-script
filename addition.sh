@@ -152,8 +152,15 @@ do
 done
 #echo deshu_xiaoshu_bei=$deshu_xiaoshu_bei
 deshu_bei=$(expr $deshu_zhengshu_bei + $deshu_xiaoshu_bei)
+#echo $deshu_zhengshu_bei + $deshu_xiaoshu_bei
 #echo deshu_bei=$deshu_bei
+#得数倍前面加0
+while [[ ${#deshu_bei} -le $xiaoshuwei ]]
+do
+		deshu_bei=0${deshu_bei}
+done
 deshu_zhengshu=${deshu_bei:0:$(expr ${#deshu_bei} - $xiaoshuwei)}
+#echo ${#deshu_bei} - $xiaoshuwei
 deshu_xiaoshu=${deshu_bei:0-$xiaoshuwei}
 if [[ ! $deshu_zhengshu ]]
 then
