@@ -144,14 +144,32 @@ done
 for i in ${zhengshu[@]}
 do
 	deshu_zhengshu_bei=$(expr $deshu_zhengshu_bei + $i)
+	error=$?
+	if [[ $error -ne 0 && $error -ne 1 ]]
+	then
+	echo 'expr error'
+	exit $error
+	fi
 done
 #echo deshu_zhengshu_bei=$deshu_zhengshu_bei
 for i in ${xiaoshu[@]}
 do
 	deshu_xiaoshu_bei=$(expr $deshu_xiaoshu_bei + $i)
+	error=$?
+	if [[ $error -ne 0 && $error -ne 1 ]]
+	then
+	echo 'expr error'
+	exit $error
+	fi
 done
 #echo deshu_xiaoshu_bei=$deshu_xiaoshu_bei
 deshu_bei=$(expr $deshu_zhengshu_bei + $deshu_xiaoshu_bei)
+error=$?
+	if [[ $error -ne 0 && $error -ne 1 ]]
+	then
+	echo 'expr error'
+	exit $error
+	fi
 #echo $deshu_zhengshu_bei + $deshu_xiaoshu_bei
 #echo deshu_bei=$deshu_bei
 #得数倍前面加0
@@ -181,7 +199,7 @@ done
 #小数位前面去掉0才能比较
 deshu_xiaoshu_kz=$deshu_xiaoshu
 #echo ${deshu_xiaoshu_kz}
-while [[ ${deshu_xiaoshu_kz:0:1} -eq 0 && $deshu_xiaoshu_kz -ne 0 ]]
+while [[ ${deshu_xiaoshu_kz:0:1} -eq 0 && ${#deshu_xiaoshu_kz} -ne 0 ]]
 do
 	deshu_xiaoshu_kz=${deshu_xiaoshu_kz:1}
 done
